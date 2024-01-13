@@ -27,9 +27,9 @@ enum Color{
 
 enum Style{
     BlackBackGround_BlackText = 128,
-    BlackBackGround_WhiteText = 135,
-    WhiteBackGround_BlackText = 224,
-    WhiteBackGround_WhiteText = 239,
+    BlackBackGround_WhiteText = 143,
+    WhiteBackGround_BlackText = 96,
+    WhiteBackGround_WhiteText = 111,
     default_color=7
 };
 
