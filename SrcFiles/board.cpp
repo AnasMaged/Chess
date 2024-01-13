@@ -1,5 +1,4 @@
 #include <windows.h>
-#include <iostream>
 
 #include "../HeaderFiles/ChessConstans.h"
 #include "../HeaderFiles/piece.h"
@@ -10,13 +9,10 @@ void changeColor(int desiredColor) {
     SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), desiredColor);
 }
 
-using namespace std;
-
-
 Board::Board(){
     for(int i = 7 ; i >= 0; i--){
         for(int j = 0; j < 8 ; j++){
-            if((i & 1) == (j & 1)){
+            if((i & 1) != (j & 1)){
                 board[i][j] = new Square(Black);
             }
             else{
@@ -74,7 +70,7 @@ void PrintDefualtLine(int i){
     changeColor(default_color);
     cout << setw(11);
     for(int j = 0 ; j < 8 ; j++){
-        if((i & 1) == (j & 1)){
+        if((i & 1) != (j & 1)){
             changeColor(BlackBackGround_BlackText);
         }       
         else{
@@ -135,5 +131,4 @@ void Board::display(){
         cout << setw(5);
     }
     cout << '\n';
-    Sleep(100000000);
 }
