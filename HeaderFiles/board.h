@@ -1,7 +1,7 @@
 #ifndef BOARD
 #define BOARD
 
-#include "square.h"
+class Square;
 
 class Board{
     private:
@@ -9,7 +9,7 @@ class Board{
 
     public:
         Board();
-        void display();
+        void display(set<pair<char , char>> attacked);
 
     friend class Game;
 };

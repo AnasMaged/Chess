@@ -1,5 +1,6 @@
 #include "../HeaderFiles/ChessConstans.h"
 #include "../HeaderFiles/board.h"
+#include "../HeaderFiles/square.h"
 #include "../HeaderFiles/rook.h"
 #include "../HeaderFiles/pawn.h"
 #include "../HeaderFiles/king.h"
@@ -21,37 +22,39 @@ Board::Board(){
                 board[i][j] = new Square(White);
             }
 
+            auto [row , col] = get_positions_on_board(i , j);
+
             if(i == 7 || i == 0){
                 Color color = (i == 0 ? Black: White);
                 PieceType type;
                 
                 if(j == 0 || j == 7){
                     type = Rook;
-                    RookPiece* rook = new RookPiece(type, color, (char)(8 - i + '0'), (char)('a' + j)); 
+                    RookPiece* rook = new RookPiece(type, color, row, col); 
                     board[i][j]->setPiece(rook);
                 }
 
                 if(j == 1 || j == 6){
                     type = Knight;
-                    KnightPiece* piece = new KnightPiece(type, color, (char)(8 - i + '0'), (char)('a' + j)); 
+                    KnightPiece* piece = new KnightPiece(type, color, row, col); 
                     board[i][j]->setPiece(piece);
                 }
 
                 if(j == 2 || j == 5){
                     type = Bishop;
-                    BishopPiece* piece = new BishopPiece(type, color, (char)(8 - i + '0'), (char)('a' + j)); 
+                    BishopPiece* piece = new BishopPiece(type, color, row, col); 
                     board[i][j]->setPiece(piece);
                 }
 
                 if(j == 3){
                     type = Queen;
-                    QueenPiece* piece = new QueenPiece(type, color, (char)(8 - i + '0'), (char)('a' + j)); 
+                    QueenPiece* piece = new QueenPiece(type, color, row, col); 
                     board[i][j]->setPiece(piece);
                 }
 
                 if(j == 4){
                     type = King;
-                    KingPiece* piece = new KingPiece(type, color, (char)(8 - i + '0'), (char)('a' + j)); 
+                    KingPiece* piece = new KingPiece(type, color, row, col); 
                     board[i][j]->setPiece(piece);
                 }
 
@@ -59,7 +62,7 @@ Board::Board(){
 
             if(i == 6 || i == 1){
                 Color color = (i == 6 ? White: Black);
-                PawnPiece* piece = new PawnPiece(Pawn, color, (char)(8 - i + '0'), (char)('a' + j)); 
+                PawnPiece* piece = new PawnPiece(Pawn, color, row, col); 
                 board[i][j]->setPiece(piece);
             }
             
@@ -88,7 +91,7 @@ void PrintDefualtLine(int i){
     changeColor(default_color);
     cout << "\n";
 }
-void Board::display(){
+void Board::display(set<pair<char , char>> attacked = {}){
 
     for(int i = 0 ; i < 8 ; i++){
         PrintDefualtLine(i);   
@@ -123,12 +126,35 @@ void Board::display(){
                 }
 
                 cout << setw((11 - length) / 2);
+                
+                pair<char , char> current_position = get_positions_on_board(i , j);
+                if(attacked.count(current_position)){
+                    if(piece->getColor() == Black){
+                        changeColor(RedBackGround_BlackText);
+                    }
+                    else{
+                        changeColor(RedBackGround_WhiteText);
+                    }
+                }
+
                 cout << mp[piece->getType()];
+                
+                changeColor(style);
                 cout << setw(11 - length - (11 - length) / 2);
             }
             else{
                 changeColor(style);
-                cout << setw(11);
+                pair<char , char> current_position = get_positions_on_board(i , j);
+                if(attacked.count(current_position)){
+                    cout << setw(3);
+                    changeColor(GreedBackGround);
+                    cout << setw(5);
+                    changeColor(style);
+                    cout << setw(3);
+                }
+                else{
+                    cout << setw(11);
+                }
             }
         }
         changeColor(default_color);
