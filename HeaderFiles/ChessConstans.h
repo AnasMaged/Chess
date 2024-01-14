@@ -33,10 +33,18 @@ enum Style{
     BlackBackGround_WhiteText = 143,
     WhiteBackGround_BlackText = 96,
     WhiteBackGround_WhiteText = 111,
+    RedBackGround_WhiteText = 79,
+    RedBackGround_BlackText = 64,
+    GreedBackGround = 175,
     default_color=7
 };
 
 bool valid(int i , int j);
+
+pair<char , char> get_positions_on_board(int row, int col);
+
+pair<int , int> get_positions_in_array(char row, char col);
+
 
 
 #endif // CHESS_CONSTANTS
