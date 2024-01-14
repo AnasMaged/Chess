@@ -1,8 +1,7 @@
 #ifndef SQUARE
 #define SQUARE
 
-#include "piece.h"
-#include "rook.h"
+class Piece;
 
 class Square {
     private:
