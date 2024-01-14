@@ -2,7 +2,7 @@
 #define SQUARE
 
 #include "piece.h"
-#include "ChessConstans.h"
+#include "rook.h"
 
 class Square {
     private:
@@ -13,11 +13,11 @@ class Square {
         Square(Color color, Piece* piece = nullptr);
 
         void setPiece(Piece* piece);
-
+        
         Color getColor();
 
         Piece* getPiece() const;
-
+        
 };
 
 
