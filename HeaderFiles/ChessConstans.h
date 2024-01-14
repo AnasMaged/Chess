@@ -6,6 +6,9 @@
 #include <unordered_map>
 #include <iostream>
 #include <string.h>
+#include <vector>
+#include <set>
+#include <windows.h>
 
 using namespace std;
 
@@ -32,5 +35,8 @@ enum Style{
     WhiteBackGround_WhiteText = 111,
     default_color=7
 };
+
+bool valid(int i , int j);
+
 
 #endif // CHESS_CONSTANTS
