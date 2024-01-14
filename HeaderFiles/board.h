@@ -1,10 +1,7 @@
 #ifndef BOARD
 #define BOARD
 
-#include<iostream>
 #include "square.h"
-
-using namespace std;
 
 class Board{
     private:
@@ -14,6 +11,7 @@ class Board{
         Board();
         void display();
 
+    friend class Game;
 };
 
 

@@ -1,9 +1,11 @@
-#include <windows.h>
-
 #include "../HeaderFiles/ChessConstans.h"
-#include "../HeaderFiles/piece.h"
 #include "../HeaderFiles/board.h"
-
+#include "../HeaderFiles/rook.h"
+#include "../HeaderFiles/pawn.h"
+#include "../HeaderFiles/king.h"
+#include "../HeaderFiles/knight.h"
+#include "../HeaderFiles/queen.h"
+#include "../HeaderFiles/bishop.h"
 
 void changeColor(int desiredColor) {
     SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), desiredColor);
@@ -25,34 +27,39 @@ Board::Board(){
                 
                 if(j == 0 || j == 7){
                     type = Rook;
+                    RookPiece* rook = new RookPiece(type, color, (char)(8 - i + '0'), (char)('a' + j)); 
+                    board[i][j]->setPiece(rook);
                 }
 
                 if(j == 1 || j == 6){
                     type = Knight;
+                    KnightPiece* piece = new KnightPiece(type, color, (char)(8 - i + '0'), (char)('a' + j)); 
+                    board[i][j]->setPiece(piece);
                 }
 
                 if(j == 2 || j == 5){
                     type = Bishop;
+                    BishopPiece* piece = new BishopPiece(type, color, (char)(8 - i + '0'), (char)('a' + j)); 
+                    board[i][j]->setPiece(piece);
                 }
 
                 if(j == 3){
                     type = Queen;
+                    QueenPiece* piece = new QueenPiece(type, color, (char)(8 - i + '0'), (char)('a' + j)); 
+                    board[i][j]->setPiece(piece);
                 }
 
                 if(j == 4){
                     type = King;
+                    KingPiece* piece = new KingPiece(type, color, (char)(8 - i + '0'), (char)('a' + j)); 
+                    board[i][j]->setPiece(piece);
                 }
 
-                
-
-                Piece* piece = new Piece(type, color, (char)(8 - i + '0'), (char)('a' + j)); 
-                board[i][j]->setPiece(piece);
-            
             }
 
             if(i == 6 || i == 1){
                 Color color = (i == 6 ? White: Black);
-                Piece* piece = new Piece(Pawn, color, (char)(8 - i + '0'), (char)('a' + j)); 
+                PawnPiece* piece = new PawnPiece(Pawn, color, (char)(8 - i + '0'), (char)('a' + j)); 
                 board[i][j]->setPiece(piece);
             }
             
@@ -68,7 +75,7 @@ string setw(int x){
 
 void PrintDefualtLine(int i){
     changeColor(default_color);
-    cout << setw(11);
+    cout << setw(11); 
     for(int j = 0 ; j < 8 ; j++){
         if((i & 1) != (j & 1)){
             changeColor(BlackBackGround_BlackText);
@@ -78,7 +85,8 @@ void PrintDefualtLine(int i){
         }
         cout << setw(11);
     }
-    cout << '\n';
+    changeColor(default_color);
+    cout << "\n";
 }
 void Board::display(){
 
@@ -101,24 +109,30 @@ void Board::display(){
                     }
                 }
                 changeColor(style);
-                int len = 4;
-                if(piece->getType() == Knight || piece->getType() == Bishop){
-                    len = 6;
-                }
-                if(piece->getType() == Queen){
-                    len = 5;
+                int length;
+
+                if(piece->getType() == Rook || piece->getType() == King || piece->getType() == Pawn){
+                    length = 4;
                 }
 
-                cout << setw((11 - len) / 2);
+                if(piece->getType() == Knight || piece->getType() == Bishop){
+                    length = 6;
+                }
+                if(piece->getType() == Queen){
+                    length = 5;
+                }
+
+                cout << setw((11 - length) / 2);
                 cout << mp[piece->getType()];
-                cout << setw(11 - len - (11 - len) / 2);
+                cout << setw(11 - length - (11 - length) / 2);
             }
             else{
                 changeColor(style);
                 cout << setw(11);
             }
         }
-        cout << '\n';
+        changeColor(default_color);
+        cout << "\n";
         PrintDefualtLine(i);
     }
 
@@ -130,5 +144,5 @@ void Board::display(){
         cout << (char)(i + 'a');
         cout << setw(5);
     }
-    cout << '\n';
+    cout << "\n";
 }
