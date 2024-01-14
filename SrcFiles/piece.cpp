@@ -1,6 +1,7 @@
 #include "../HeaderFiles/ChessConstans.h"
 #include "../HeaderFiles/piece.h"
-#include "../HeaderFiles/board.h"
+#include "../HeaderFiles/board.h" 
+#include "../HeaderFiles/square.h"
 
 Piece::Piece(){}
 
@@ -33,16 +34,28 @@ void Piece::set_dy(vector<int> dy){
     this->dy = dy;
 }
 
-set<pair<char, char>> Piece::get_valid_moves(Board* board, char row, char col){
+int Piece::get_max_moves(){
+    return this->max_moves;
+}
+set<pair<char, char>> Piece::get_valid_moves(Square* board[8][8], char row, char col){
     set<pair<char, char>> valid_moves;
-    int i = row - 'a', j = col - '1';
+    auto [i , j] = get_positions_in_array(row, col);
     for(int k = 0; k < (int)this->dx.size(); k++){
-        int x = i , y = j;
-        while(valid(x, y)){
-            valid_moves.insert(make_pair((char)(x + 'a'), (char)(y + '1')));
+        int x = i + dx[k] , y = j + dy[k] , max_count_of_moves = board[i][j]->getPiece()->get_max_moves();
+        while(valid(x, y) && max_count_of_moves > 0){
+            max_count_of_moves--;
+            if(board[x][y]->getPiece() != nullptr){
+                Color original_piece = board[i][j]->getPiece()->getColor();
+                Color attacked_piece = board[x][y]->getPiece()->getColor();
+                if(original_piece != attacked_piece){
+                    valid_moves.insert(get_positions_on_board(x , y));
+                }
+                break;
+            }
+            valid_moves.insert(get_positions_on_board(x , y));
             x += dx[k];
             y += dy[k];
-        }
+        } 
     }
     return valid_moves;
 }

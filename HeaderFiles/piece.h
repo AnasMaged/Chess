@@ -2,6 +2,7 @@
 #define PIECE
 
 class Board;
+class Square;
 
 class Piece{
     private:
@@ -18,6 +19,8 @@ class Piece{
         
         Color getColor();
 
+        int get_max_moves();
+
         void setPosition(char row, char col);
         
         void set_max_moves(int max_moves);
@@ -26,7 +29,7 @@ class Piece{
 
         void set_dy(vector<int> dy);
         
-        set<pair<char, char>> get_valid_moves(Board* board, char row, char col);
+        set<pair<char, char>> get_valid_moves(Square* board[8][8], char row, char col);
 };
 
 
