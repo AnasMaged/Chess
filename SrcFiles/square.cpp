@@ -1,6 +1,6 @@
-#include "../HeaderFiles/square.h"
-#include "../HeaderFiles/piece.h"
 #include "../HeaderFiles/ChessConstans.h"
+#include "../HeaderFiles/piece.h"
+#include "../HeaderFiles/square.h"
 
 Square::Square(Color color, Piece* piece) : color(color), piece(piece){}
 
