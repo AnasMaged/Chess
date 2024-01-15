@@ -12,6 +12,11 @@ void Square::setPiece(Piece* piece){
     this->piece = piece;
 }
 
+void Square::deletePiece(){
+    delete this->piece;
+    this->piece = nullptr;
+}
+
 Piece* Square::getPiece() const{
     return this->piece;
 }

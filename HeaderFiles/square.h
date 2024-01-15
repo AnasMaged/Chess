@@ -12,6 +12,8 @@ class Square {
         Square(Color color, Piece* piece = nullptr);
 
         void setPiece(Piece* piece);
+
+        void deletePiece();
         
         Color getColor();
 
