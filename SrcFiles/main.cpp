@@ -2,6 +2,7 @@
 #include "..\HeaderFiles\game.h"
 
 int main(){
+    
     while(true){
         cout << "-------------------------\n";
         cout << "     Game Menu\n";
@@ -18,14 +19,14 @@ int main(){
     
         if(choice == "1"){
             cout << "Starting a new game...\n\n";
-            Sleep(1000);
+            std::this_thread::sleep_for(std::chrono::seconds(2));
             Game* game = new Game();
             game->play();
         }
 
         else if(choice == "2"){
             cout << "Exiting the program. Goodbye!\n\n";
-            Sleep(2000);
+            std::this_thread::sleep_for(std::chrono::seconds(2));
             break;
         }
         
