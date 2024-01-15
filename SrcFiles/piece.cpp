@@ -2,6 +2,7 @@
 #include "../HeaderFiles/piece.h"
 #include "../HeaderFiles/board.h" 
 #include "../HeaderFiles/square.h"
+#include "../HeaderFiles/game.h"
 
 Piece::Piece(){}
 
@@ -21,6 +22,10 @@ void Piece::setPosition(char row, char col){
     this->col = col;
 }
 
+pair<char , char> Piece::getPosition(){
+    return make_pair(this->row, this->col);
+}
+
 
 void Piece::set_max_moves(int max_moves){
     this->max_moves = max_moves;
@@ -37,16 +42,19 @@ void Piece::set_dy(vector<int> dy){
 int Piece::get_max_moves(){
     return this->max_moves;
 }
-set<pair<char, char>> Piece::get_valid_moves(Square* board[8][8], char row, char col){
+
+set<pair<char, char>> Piece::get_valid_moves(Board* board, char row, char col){
     set<pair<char, char>> valid_moves;
+    vector<vector<Square*>> current_board = board->get_board();
     auto [i , j] = get_positions_in_array(row, col);
+
     for(int k = 0; k < (int)this->dx.size(); k++){
-        int x = i + dx[k] , y = j + dy[k] , max_count_of_moves = board[i][j]->getPiece()->get_max_moves();
+        int x = i + dx[k] , y = j + dy[k] , max_count_of_moves = current_board[i][j]->getPiece()->get_max_moves();
         while(valid(x, y) && max_count_of_moves > 0){
             max_count_of_moves--;
-            if(board[x][y]->getPiece() != nullptr){
-                Color original_piece = board[i][j]->getPiece()->getColor();
-                Color attacked_piece = board[x][y]->getPiece()->getColor();
+            if(current_board[x][y]->getPiece() != nullptr){
+                Color original_piece = current_board[i][j]->getPiece()->getColor();
+                Color attacked_piece = current_board[x][y]->getPiece()->getColor();
                 if(original_piece != attacked_piece){
                     valid_moves.insert(get_positions_on_board(x , y));
                 }
