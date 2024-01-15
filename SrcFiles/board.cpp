@@ -12,7 +12,30 @@ void changeColor(int desiredColor) {
     cout << color_anzi_escape[desiredColor];
 }
 
-Board::Board(){
+    
+Board::Board(vector<vector<Square*>> other){
+    board.resize(8, vector<Square*>(8));
+    
+    for (int i = 0; i < 8; i++) {
+        for (int j = 0; j < 8; j++) {
+            board[i][j] = new Square(other[i][j]->getColor());
+            
+            if(other[i][j]->getPiece() != nullptr){
+                Piece* current_piece = other[i][j]->getPiece();
+                auto [row, col] = get_positions_on_board(i, j);
+                Piece* new_piece = new Piece(current_piece->getType(), current_piece->getColor(), row, col);
+                board[i][j]->setPiece(new_piece);
+            }
+        }
+    }
+}
+
+
+vector<vector<Square*>> Board::get_board(){
+    return this->board;
+}
+
+Board::Board() : board(8, vector<Square*>(8)){
     turn = White;
 
     for(int i = 7 ; i >= 0; i--){

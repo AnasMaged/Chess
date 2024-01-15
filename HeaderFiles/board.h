@@ -7,10 +7,15 @@ class Square;
 
 class Board{
     private:
-        Square* board[8][8];         
+        vector<vector<Square*>> board;    
         Color turn;
     public:
         Board();
+
+        Board(vector<vector<Square*>> other);
+
+        vector<vector<Square*>> get_board();
+
         void display(set<pair<char , char>> attacked = {}, int winner = 0, bool stalemate = false, bool check = false);
 
     friend class Game;
