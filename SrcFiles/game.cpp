@@ -31,13 +31,14 @@ vector<Piece*> Game::get_white_pieces(){
 
 void Game::play(){
     while(true){
-        board->display({}); 
+        board->display(); 
         cout << "Enter the position of the piece you want to move: ";
         char row, col; cin >> col >> row;
         int i = 7 - (row - '1'), j = col - 'a';
         auto valid_moves = board->board[i][j]->getPiece()->get_valid_moves(board->board, row, col);
-        board->display(valid_moves);
-        Sleep(5000);
+        valid_moves.insert(make_pair('8', 'e'));
+        board->display(valid_moves, 1, 0, 0);
+        std::this_thread::sleep_for(std::chrono::seconds(2));
         break;
     }
 }
