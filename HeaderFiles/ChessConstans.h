@@ -3,12 +3,13 @@
 #ifndef CHESS_CONSTANTS
 #define CHESS_CONSTANTS
 
-#include <unordered_map>
 #include <iostream>
-#include <string.h>
+#include <string>
+#include <thread>
+#include <chrono>
+#include <unordered_map>
 #include <vector>
 #include <set>
-#include <windows.h>
 
 using namespace std;
 
@@ -23,20 +24,24 @@ enum PieceType{
 
 extern unordered_map<PieceType, string> mp;
 
+extern unordered_map<int, string> color_anzi_escape;
+
 enum Color{
     White,
     Black
 };
 
 enum Style{
-    BlackBackGround_BlackText = 128,
-    BlackBackGround_WhiteText = 143,
-    WhiteBackGround_BlackText = 96,
-    WhiteBackGround_WhiteText = 111,
-    RedBackGround_WhiteText = 79,
-    RedBackGround_BlackText = 64,
-    GreedBackGround = 175,
-    default_color=7
+    BlackText,
+    WhiteText,
+    RedText,
+    GreenText,
+    YelloText,
+    BlackBackGround,
+    WhiteBackGround,
+    GreenBackGround,
+    RedBackGround,
+    default_color
 };
 
 bool valid(int i , int j);
@@ -45,6 +50,10 @@ pair<char , char> get_positions_on_board(int row, int col);
 
 pair<int , int> get_positions_in_array(char row, char col);
 
-
-
+extern char topLeft;
+extern char topRight;
+extern char bottomLeft;
+extern char bottomRight;
+extern char horizontal_line;
+extern char vertical_line;
 #endif // CHESS_CONSTANTS
