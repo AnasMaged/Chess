@@ -9,10 +9,12 @@
 #include "../HeaderFiles/bishop.h"
 
 void changeColor(int desiredColor) {
-    SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), desiredColor);
+    cout << color_anzi_escape[desiredColor];
 }
 
 Board::Board(){
+    turn = White;
+
     for(int i = 7 ; i >= 0; i--){
         for(int j = 0; j < 8 ; j++){
             if((i & 1) != (j & 1)){
@@ -76,22 +78,60 @@ string setw(int x){
     return spaces;
 }
 
-void PrintDefualtLine(int i){
+void PrintDefualtLine(int i, bool down = 0){
     changeColor(default_color);
     cout << setw(11); 
     for(int j = 0 ; j < 8 ; j++){
         if((i & 1) != (j & 1)){
-            changeColor(BlackBackGround_BlackText);
+            changeColor(BlackBackGround);
         }       
         else{
-            changeColor(WhiteBackGround_BlackText);
+            changeColor(WhiteBackGround);
         }
         cout << setw(11);
     }
     changeColor(default_color);
+
+    if(i == 3 || i == 4){
+        if((i == 3 && down == 0) || (i == 4 && down == 1)){
+            
+            if(i == 3){
+                cout << topLeft;
+            }
+            else{
+                cout << bottomLeft;
+            }
+
+            cout << string(15 , horizontal_line);
+
+            if(i == 3){
+                cout << topRight;
+            }
+            else{
+                cout << bottomRight;
+            }
+        }
+        else{
+            cout << vertical_line;
+            cout << setw(15);
+            cout << vertical_line;
+        }
+    }
     cout << "\n";
 }
-void Board::display(set<pair<char , char>> attacked = {}){
+
+void handle_spaces(string message, int spaces_count, Style text_color){
+    int length = (int)message.size();
+    changeColor(default_color);
+    int before = (spaces_count - length) / 2;
+    int after = spaces_count - length - before;
+    cout << setw(before);
+    changeColor(text_color);
+    cout << message;
+    changeColor(default_color);
+    cout << setw(after);
+}
+void Board::display(set<pair<char , char>> attacked, int winner, bool stalemate, bool check){
 
     for(int i = 0 ; i < 8 ; i++){
         PrintDefualtLine(i);   
@@ -100,18 +140,23 @@ void Board::display(set<pair<char , char>> attacked = {}){
         for(int j = 0 ; j < 8 ; j++){
             Piece* piece = board[i][j]->getPiece();
             
-            Style style = (board[i][j]->getColor() == Black ? BlackBackGround_BlackText: WhiteBackGround_BlackText);
+            Style square_color;
+            if(board[i][j]->getColor() == Black){
+                square_color = BlackBackGround;
+            }
+            else{
+                square_color = WhiteBackGround;
+            }
+
+            changeColor(square_color);
 
             if(piece != nullptr){
                 if(piece->getColor() == White){
-                    if(board[i][j]->getColor() == Black){
-                        style = BlackBackGround_WhiteText;
-                    }
-                    else{
-                        style = WhiteBackGround_WhiteText;
-                    }
+                    changeColor(WhiteText);
                 }
-                changeColor(style);
+                else{
+                    changeColor(BlackText);
+                }
                 int length;
 
                 if(piece->getType() == Rook || piece->getType() == King || piece->getType() == Pawn){
@@ -129,27 +174,22 @@ void Board::display(set<pair<char , char>> attacked = {}){
                 
                 pair<char , char> current_position = get_positions_on_board(i , j);
                 if(attacked.count(current_position)){
-                    if(piece->getColor() == Black){
-                        changeColor(RedBackGround_BlackText);
-                    }
-                    else{
-                        changeColor(RedBackGround_WhiteText);
-                    }
+                    changeColor(RedBackGround);
                 }
 
                 cout << mp[piece->getType()];
                 
-                changeColor(style);
+                changeColor(square_color);
+
                 cout << setw(11 - length - (11 - length) / 2);
             }
             else{
-                changeColor(style);
                 pair<char , char> current_position = get_positions_on_board(i , j);
                 if(attacked.count(current_position)){
                     cout << setw(3);
-                    changeColor(GreedBackGround);
+                    changeColor(GreenBackGround);
                     cout << setw(5);
-                    changeColor(style);
+                    changeColor(square_color);
                     cout << setw(3);
                 }
                 else{
@@ -158,8 +198,75 @@ void Board::display(set<pair<char , char>> attacked = {}){
             }
         }
         changeColor(default_color);
+        if(i >= 3 && i <= 4){
+            cout << vertical_line;
+            if(i == 3){
+                if(winner != 0){
+                    string message = "Checkmate!";
+                    Style text_color = RedText; 
+
+                    handle_spaces(message, 15, text_color); 
+                }
+
+                else if(stalemate == true){
+                    string message = "Stalement!";
+                    Style text_color = RedText; 
+                    
+                    handle_spaces(message, 15, text_color); 
+                }
+
+                else{
+                    string message = "White to play";
+                    Style text_color = YelloText;
+
+                    if(turn == Black){
+                        message = "Black to play";
+                    }
+
+                    handle_spaces(message, 15, text_color);
+                }
+            }   
+
+            if(i == 4){
+                
+                if(winner != 0){
+                    Color winner_color = (winner == 1 ? White : Black);
+                    
+                    string message = "White Wins!";
+                    Style text_color = GreenText;
+                    
+                    if(winner_color == Black){
+                        message = "Black Wins";
+                    }
+                    
+                    handle_spaces(message, 15, text_color); 
+                }   
+
+                else if(stalemate == true){
+                    string message = "Draw!";
+                    Style text_color = YelloText;
+                    
+                    handle_spaces(message, 15, text_color); 
+                }
+
+                else if(check == true){
+                    string message = "Check!";
+                    Style text_color = RedText;
+                    
+                    handle_spaces(message, 15, text_color); 
+                }
+
+                else{
+                    changeColor(default_color);
+                    cout << setw(15);
+                }
+            }   
+
+            changeColor(default_color);
+            cout << vertical_line;
+        }
         cout << "\n";
-        PrintDefualtLine(i);
+        PrintDefualtLine(i , 1);
     }
 
     changeColor(default_color);
