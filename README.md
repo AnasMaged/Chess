@@ -15,7 +15,7 @@ git clone https://github.com/AnasMaged/Chess.git
 ```
 - 🏃‍♂️ Compile and run, Navigate to the working directory of the repository and open a Bash window then invoke the following command
 ```bash
-g++ g++ .\SrcFiles\*.cpp -o Chess
+g++ .\SrcFiles\*.cpp -o Chess
 ```
 
 - Open Chess.exe 
