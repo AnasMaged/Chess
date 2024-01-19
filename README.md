@@ -13,11 +13,8 @@ It is a simulated replica of the real-world chess game, which includes
 ```bash
 git clone https://github.com/AnasMaged/Chess.git
 ```
-- 🏃‍♂️ Compile and run, navigate to the root project directory and open a bash window then invoke the following command:
+- 🏃‍♂️ Compile and run, just use the cmake to build it.
 
-```bash
-g++ SrcFiles/*.cpp -o Chess
-``` 
 - Open Chess.exe
 
 # How to Play
