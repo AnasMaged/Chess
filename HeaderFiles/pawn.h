@@ -6,13 +6,11 @@
 
 class PawnPiece : public Piece{
     private:
-        int first_move;
+   
     public:
-        PawnPiece(PieceType type, Color color, char row, char col);
+        PawnPiece(PieceType type, Color color, char row, char col, bool first_move = false);
 
-        int get_first_move();
-
-        void set_first_move(int x);
+        set<pair<char, char>> get_valid_moves(Board* board, char row, char col, string last_move = "") override;
 };
 
 
