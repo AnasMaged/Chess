@@ -232,7 +232,7 @@ void Board::display(set<pair<char , char>> attacked, int winner, bool stalemate,
                 }
 
                 else if(stalemate == true){
-                    string message = "Stalement!";
+                    string message = "Stalemate!";
                     Style text_color = RedText; 
                     
                     handle_spaces(message, 15, text_color); 
