@@ -17,7 +17,14 @@ git clone https://github.com/AnasMaged/Chess.git
 ```bash
 g++ SrcFiles/*.cpp -o Chess
 ```
+## How to Play
 
+To make a move, simply specify the row and column of the piece you want to move. Columns are defined from 'a' to 'h', and rows from '1' to '8'. For example, the squares are named like 'c2', 'e6', 'f3', and so on.
+
+
+# initial board
 <h1 align="center">
     <img src="img/initial_board.png" alt="StockDory" width=600>
 </h1>
+
+# board showing the avaiable moves for some piece
