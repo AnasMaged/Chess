@@ -11,7 +11,6 @@
 void changeColor(int desiredColor) {
     cout << color_anzi_escape[desiredColor];
 }
-
     
 Board::Board(vector<vector<Square*>> other){
     board.resize(8, vector<Square*>(8));
@@ -23,7 +22,7 @@ Board::Board(vector<vector<Square*>> other){
             if(other[i][j]->getPiece() != nullptr){
                 Piece* current_piece = other[i][j]->getPiece();
                 auto [row, col] = get_positions_on_board(i, j);
-                Piece* new_piece = new Piece(current_piece->getType(), current_piece->getColor(), row, col);
+                Piece* new_piece = make_new_peice(current_piece, row, col, current_piece->get_first_move());
                 board[i][j]->setPiece(new_piece);
             }
         }
@@ -55,31 +54,31 @@ Board::Board() : board(8, vector<Square*>(8)){
                 
                 if(j == 0 || j == 7){
                     type = Rook;
-                    RookPiece* rook = new RookPiece(type, color, row, col); 
+                    RookPiece* rook = new RookPiece(type, color, row, col, true); 
                     board[i][j]->setPiece(rook);
                 }
 
                 if(j == 1 || j == 6){
                     type = Knight;
-                    KnightPiece* piece = new KnightPiece(type, color, row, col); 
+                    KnightPiece* piece = new KnightPiece(type, color, row, col, true); 
                     board[i][j]->setPiece(piece);
                 }
 
                 if(j == 2 || j == 5){
                     type = Bishop;
-                    BishopPiece* piece = new BishopPiece(type, color, row, col); 
+                    BishopPiece* piece = new BishopPiece(type, color, row, col, true); 
                     board[i][j]->setPiece(piece);
                 }
 
                 if(j == 3){
                     type = Queen;
-                    QueenPiece* piece = new QueenPiece(type, color, row, col); 
+                    QueenPiece* piece = new QueenPiece(type, color, row, col, true); 
                     board[i][j]->setPiece(piece);
                 }
 
                 if(j == 4){
                     type = King;
-                    KingPiece* piece = new KingPiece(type, color, row, col); 
+                    KingPiece* piece = new KingPiece(type, color, row, col, true); 
                     board[i][j]->setPiece(piece);
                 }
 
@@ -87,7 +86,7 @@ Board::Board() : board(8, vector<Square*>(8)){
 
             if(i == 6 || i == 1){
                 Color color = (i == 6 ? White: Black);
-                PawnPiece* piece = new PawnPiece(Pawn, color, row, col); 
+                PawnPiece* piece = new PawnPiece(Pawn, color, row, col, true); 
                 board[i][j]->setPiece(piece);
             }
             
