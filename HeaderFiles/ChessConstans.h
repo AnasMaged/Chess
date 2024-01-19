@@ -14,6 +14,8 @@
 
 using namespace std;
 
+class Piece;
+
 enum PieceType{
     Pawn,
     Rook,
@@ -50,6 +52,8 @@ bool valid(int i , int j);
 pair<char , char> get_positions_on_board(int row, int col);
 
 pair<int , int> get_positions_in_array(char row, char col);
+
+Piece *make_new_peice(Piece* piece, char row, char col, bool first_move = false);
 
 extern char topLeft;
 extern char topRight;

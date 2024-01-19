@@ -1,4 +1,11 @@
 #include "..\HeaderFiles\ChessConstans.h"
+#include "..\HeaderFiles\piece.h"
+#include "..\HeaderFiles\bishop.h"
+#include "..\HeaderFiles\king.h"
+#include "..\HeaderFiles\pawn.h"
+#include "..\HeaderFiles\knight.h"
+#include "..\HeaderFiles\queen.h"
+#include "..\HeaderFiles\rook.h"
 
 
 unordered_map<PieceType, string> mp{
@@ -39,6 +46,38 @@ pair<int , int> get_positions_in_array(char row, char col){
     int y = col - 'a';
     return make_pair(x , y);
 }
+
+Piece *make_new_peice(Piece* piece, char row, char col, bool first_move){
+    Piece *new_piece = nullptr;
+
+    if(piece->getType() == Knight){
+        new_piece = new KnightPiece(piece->getType(), piece->getColor(), row, col, first_move);
+    }
+
+    if(piece->getType() == Pawn){
+        new_piece = new PawnPiece(piece->getType(), piece->getColor(), row, col, first_move);
+    }
+    
+    if(piece->getType() == Bishop){
+        new_piece = new BishopPiece(piece->getType(), piece->getColor(), row, col, first_move);
+    }
+
+    if(piece->getType() == King){
+        new_piece = new KingPiece(piece->getType(), piece->getColor(), row, col, first_move);
+    }
+
+    if(piece->getType() == Queen){
+        new_piece = new QueenPiece(piece->getType(), piece->getColor(), row, col, first_move);
+    }
+
+    if(piece->getType() == Rook){
+        new_piece = new RookPiece(piece->getType(), piece->getColor(), row, col, first_move);
+    }
+
+
+    return new_piece;
+}
+
 
 char topLeft = '\xc9';
 char topRight = '\xbB';
