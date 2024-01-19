@@ -13,7 +13,7 @@ It is a simulated replica of the real-world chess game, which includes
 git clone https://github.com/AnasMaged/Chess.git
 ```
 - 🏃‍♂️ Compile and run
--Navigate to the working directory of the repository and open a Bash window.
+- Navigate to the working directory of the repository and open a Bash window.
 ```bash
 g++ SrcFiles/*.cpp -o Chess
 ```
