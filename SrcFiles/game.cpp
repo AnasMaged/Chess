@@ -95,7 +95,8 @@ bool Game::is_check(Board* board, vector<Piece*> other_player_pieces, Color play
             continue;   
         }
 
-        auto [row , col] = piece->getPosition();
+        pair<char , char> temp = piece->getPosition();
+        char row = temp.first, col = temp.second;
         
         auto moves = piece->get_valid_moves(board, row, col, this, get_last_move());
 
@@ -112,7 +113,8 @@ Board* Game::copy_and_move(Board* board, pair<int, int> from, pair<int , int> to
 
     Piece* piece = new_board->get_board()[from.first][from.second]->getPiece();
 
-    auto [row , col] = get_positions_on_board(to.first, to.second);
+    pair<char , char> temp = get_positions_on_board(to.first, to.second);
+    char row = temp.first, col = temp.second;
 
     Piece* new_piece = make_new_peice(piece, row, col, piece->get_first_move());
     new_board->get_board()[to.first][to.second]->setPiece(new_piece);
@@ -124,7 +126,8 @@ bool Game::is_stalemate(Board* board, vector<Piece*> player_pieces){
     bool cannot_move = true;
 
     for(auto piece : player_pieces){
-        auto [row, col] = piece->getPosition();
+        pair<char,  char> temp = piece->getPosition();
+        char row = temp.first, col = temp.second;
         auto moves = piece->get_valid_moves(board, row, col, this, get_last_move());
         moves = review(moves, get_positions_in_array(row, col));
         if(!moves.empty()){
@@ -138,8 +141,10 @@ bool Game::is_stalemate(Board* board, vector<Piece*> player_pieces){
 set<pair<char, char>> Game::review(set<pair<char, char>> valid_moves, pair<int , int> from){
     set<pair<char , char>> new_valid_moves;
 
-    for(auto [row, col] : valid_moves){
-        auto [i , j] = get_positions_in_array(row, col);
+    for(auto temp2 : valid_moves){
+        char row = temp2.first, col = temp2.second; 
+        pair<int , int> temp = get_positions_in_array(row, col);
+        int i = temp.first, j = temp.second;
             
         Board* new_board = copy_and_move(board, from, make_pair(i , j));
         vector<Piece*> other_player_pieces;
@@ -167,7 +172,8 @@ set<pair<char, char>> Game::review(set<pair<char, char>> valid_moves, pair<int ,
 void Game::move(Board* board, pair<int , int> from, pair<int , int> to){
     Piece* piece = board->get_board()[from.first][from.second]->getPiece();
 
-    auto [row , col] = get_positions_on_board(to.first, to.second);
+    pair<char , char> temp = get_positions_on_board(to.first, to.second);
+    char row = temp.first, col = temp.second;
 
     Piece* new_piece = make_new_peice(piece, row, col, false);  
     
@@ -225,7 +231,8 @@ void Game::move(Board* board, pair<int , int> from, pair<int , int> to){
         if(abs(to.second - from.second) > 1){ // castle
             int i = from.first , j = (to.second - from.second > 0 ? 7 : 0);
             int new_i = i, new_j = to.second + (to.second - from.second > 0 ? -1 : 1);
-            auto [new_row, new_col] = get_positions_on_board(new_i , new_j);
+            pair<char , char> temp = get_positions_on_board(new_i, new_j);
+            char new_row = temp.first, new_col = temp.second;
             Piece *new_rook = make_new_peice(board->get_board()[i][j]->getPiece(), new_row, new_col);
             delete_piece_from_vector(new_piece->getColor(), board->get_board()[i][j]->getPiece());
             insert_piece_in_vector(new_piece->getColor(), new_rook);
@@ -280,7 +287,8 @@ void Game::play(){
             cout << "Invalid input. Please select a valid position on the board: ";
             goto label2;
         }
-        auto [i , j] = get_positions_in_array(row, col);
+        pair<int , int> temp = get_positions_in_array(row, col);
+        int i = temp.first, j = temp.second;
         if(board->board[i][j]->getPiece() == nullptr){
             cout << "Invalid input. Please choose a non-empty square: ";
             goto label2;
@@ -302,7 +310,8 @@ void Game::play(){
         label3: 
         cout << "Choose a position of these:{";
         int valid_move_count = (int)new_valid_moves.size();
-        for(auto [row, col] : new_valid_moves){
+        for(auto temp : new_valid_moves){
+            char row = temp.first, col = temp.second;
             valid_move_count--;
             cout << col << row;
             if(valid_move_count) cout << ", ";

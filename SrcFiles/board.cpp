@@ -21,7 +21,8 @@ Board::Board(vector<vector<Square*>> other){
             
             if(other[i][j]->getPiece() != nullptr){
                 Piece* current_piece = other[i][j]->getPiece();
-                auto [row, col] = get_positions_on_board(i, j);
+                pair<char , char> temp = get_positions_on_board(i, j);
+                char row = temp.first, col = temp.second;
                 Piece* new_piece = make_new_peice(current_piece, row, col, current_piece->get_first_move());
                 board[i][j]->setPiece(new_piece);
             }
