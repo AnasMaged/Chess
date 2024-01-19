@@ -8,7 +8,7 @@ class BishopPiece : public Piece{
     private:
 
     public:
-        BishopPiece(PieceType type, Color color, char row, char col);
+        BishopPiece(PieceType type, Color color, char row, char col, bool first_move = false);
 };
 
 

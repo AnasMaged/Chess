@@ -8,7 +8,8 @@ class KnightPiece : public Piece{
     private:
 
     public:
-        KnightPiece(PieceType type, Color color, char row, char col);
+        KnightPiece(PieceType type, Color color, char row, char col, bool first_move = false);
+
 };
 
 

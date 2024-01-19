@@ -8,7 +8,7 @@ class QueenPiece : public Piece{
     private:
 
     public:
-        QueenPiece(PieceType type, Color color, char row, char col);
+        QueenPiece(PieceType type, Color color, char row, char col, bool first_move = false);
 };
 
 

@@ -6,8 +6,8 @@
 
 Piece::Piece(){}
 
-Piece::Piece(PieceType type, Color color, char row, char col) 
-            : type(type), color(color), row(row), col(col) {
+Piece::Piece(PieceType type, Color color, char row, char col, bool first_move) 
+            : type(type), color(color), row(row), col(col), first_move(first_move) {
 
             
             }
@@ -42,12 +42,24 @@ void Piece::set_dy(vector<int> dy){
     this->dy = dy;
 }
 
+vector<int> Piece::get_dx(){
+    return this->dx;
+}
+
+vector<int> Piece::get_dy(){
+    return this->dy;
+}
+
+bool Piece::get_first_move(){
+    return this->first_move;
+}
+
 int Piece::get_max_moves(){
     int max_count_of_moves = this->max_moves;
     return max_count_of_moves;
 }
 
-set<pair<char, char>> Piece::get_valid_moves(Board* board, char row, char col){
+set<pair<char, char>> Piece::get_valid_moves(Board* board, char row, char col, string last_move){
     set<pair<char, char>> valid_moves;
     vector<vector<Square*>> current_board = board->get_board();
     auto [i , j] = get_positions_in_array(row, col);
