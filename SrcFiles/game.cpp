@@ -2,7 +2,15 @@
 #include "..\HeaderFiles\board.h"
 #include "..\HeaderFiles\game.h" 
 #include "..\HeaderFiles\square.h" 
-#include "..\HeaderFiles\piece.h"
+#include "..\HeaderFiles\piece.h" 
+#include "..\HeaderFiles\knight.h"
+#include "..\HeaderFiles\pawn.h"
+#include "..\HeaderFiles\king.h"
+#include "..\HeaderFiles\bishop.h"
+#include "..\HeaderFiles\king.h"
+#include "..\HeaderFiles\rook.h"
+#include "..\HeaderFiles\queen.h"
+
 
 Game::Game(){
     this->board = new Board();
@@ -21,12 +29,58 @@ Game::Game(){
     }
 }
 
+
 vector<Piece*> Game::get_black_pieces(){
     return BlackPieces;
 }
 
 vector<Piece*> Game::get_white_pieces(){
     return WhitePieces;
+}
+
+void Game::delete_piece_from_vector(Color color, Piece *piece) {
+    vector<Piece*>& pieces = (color == White ? WhitePieces : BlackPieces);
+
+    auto it = find(pieces.begin(), pieces.end(), piece);
+
+    pieces.erase(it);
+}
+
+void Game::insert_piece_in_vector(Color color, Piece *piece) {
+    vector<Piece*>& pieces = (color == Color::White) ? WhitePieces : BlackPieces;
+    pieces.push_back(piece);
+}
+
+
+Piece *make_new_peice(Piece* piece, char row, char col){
+    Piece *new_piece = nullptr;
+
+    if(piece->getType() == Knight){
+        new_piece = new KnightPiece(piece->getType(), piece->getColor(), row, col);
+    }
+
+    if(piece->getType() == Pawn){
+        new_piece = new PawnPiece(piece->getType(), piece->getColor(), row, col);
+    }
+    
+    if(piece->getType() == Bishop){
+        new_piece = new BishopPiece(piece->getType(), piece->getColor(), row, col);
+    }
+
+    if(piece->getType() == King){
+        new_piece = new KingPiece(piece->getType(), piece->getColor(), row, col);
+    }
+
+    if(piece->getType() == Queen){
+        new_piece = new QueenPiece(piece->getType(), piece->getColor(), row, col);
+    }
+
+    if(piece->getType() == Rook){
+        new_piece = new RookPiece(piece->getType(), piece->getColor(), row, col);
+    }
+
+
+    return new_piece;
 }
 
 pair<char , char> get_king_position(vector<vector<Square*>> board, Color player_color){
@@ -47,23 +101,17 @@ pair<char , char> get_king_position(vector<vector<Square*>> board, Color player_
     return make_pair(row, col);
 }   
 
-bool Game::can_move(Board* board, vector<Piece*> other_player_pieces, Color player_color){
-    cout << "a7a\n";
-    return true;
+bool Game::is_check(Board* board, vector<Piece*> other_player_pieces, Color player_color){
     pair<char , char> king_position = get_king_position(board->get_board(), player_color);
 
-    bool can = true;
+    bool can = false;
 
-
-        cout << king_position.first << ' ' << king_position.second << '\n';
-        return true;
     for(auto piece : other_player_pieces){
         auto [row , col] = piece->getPosition();
-        cout << row << ' ' << col << '\n';
-        return true;
         auto moves = piece->get_valid_moves(board, row, col);
+
         if(moves.count(king_position)){
-            can = false;
+            can = true;
         }
     }    
 
@@ -77,13 +125,28 @@ Board* Game::copy_and_move(Board* board, pair<int, int> from, pair<int , int> to
 
     auto [row , col] = get_positions_on_board(to.first, to.second);
 
-    Piece* new_piece = new Piece(piece->getType(), piece->getColor(), row, col);
+    Piece* new_piece = make_new_peice(piece, row, col);
     new_board->get_board()[to.first][to.second]->setPiece(new_piece);
     new_board->get_board()[from.first][from.second]->deletePiece();
     return new_board;
 }
 
-set<pair<char, char>> Game::check(set<pair<char, char>> valid_moves, pair<int , int> from){
+bool Game::is_stalemate(Board* board, vector<Piece*> player_pieces){
+    bool cannot_move = true;
+
+    for(auto piece : player_pieces){
+        auto [row, col] = piece->getPosition();
+        auto moves = piece->get_valid_moves(board, row, col);
+        moves = review(moves, get_positions_in_array(row, col));
+        if(!moves.empty()){
+            cannot_move = false;
+        }
+    }
+
+    return cannot_move;
+}
+
+set<pair<char, char>> Game::review(set<pair<char, char>> valid_moves, pair<int , int> from){
     set<pair<char , char>> new_valid_moves;
 
     for(auto [row, col] : valid_moves){
@@ -103,19 +166,31 @@ set<pair<char, char>> Game::check(set<pair<char, char>> valid_moves, pair<int , 
             player_color = White;
         }
         
-        if(can_move(new_board, other_player_pieces, player_color) == true){
+        if(is_check(new_board, other_player_pieces, player_color) == false){
             new_valid_moves.insert(make_pair(row, col));
         }
     }
     return new_valid_moves;
 }
 
+
+
 void Game::move(Board* board, pair<int , int> from, pair<int , int> to){
     Piece* piece = board->get_board()[from.first][from.second]->getPiece();
 
     auto [row , col] = get_positions_on_board(to.first, to.second);
 
-    Piece* new_piece = new Piece(piece->getType(), piece->getColor(), row, col);
+    Piece* new_piece = make_new_peice(piece, row, col);  
+    
+    delete_piece_from_vector(piece->getColor(), piece);
+
+    if(board->get_board()[to.first][to.second]->getPiece() != nullptr){
+        Piece *attacked_piece = board->get_board()[to.first][to.second]->getPiece();
+        delete_piece_from_vector(attacked_piece->getColor(), attacked_piece);
+    }
+
+    insert_piece_in_vector(new_piece->getColor(), new_piece);
+
     board->get_board()[to.first][to.second]->setPiece(new_piece);
     board->get_board()[from.first][from.second]->deletePiece();
 }
@@ -123,7 +198,32 @@ void Game::move(Board* board, pair<int , int> from, pair<int , int> to){
 void Game::play(){
     while(true){
         label1:
-        board->display(); 
+        vector<Piece*> other_player_pieces = (board->turn == White ? BlackPieces : WhitePieces);
+        Color player_color = (board->turn == White ? White : Black);
+        pair<char, char> king_position = get_king_position(board->get_board(), player_color);
+        bool check = is_check(board, other_player_pieces, player_color);
+
+        vector<Piece*> player_pieces = (board->turn == White ? WhitePieces : BlackPieces);;
+        bool stalement = is_stalemate(board, player_pieces);
+
+        if(check == true && stalement == true){
+            
+            board->display({king_position}, (player_color == White ? 2 : 1), false, true);
+            return;
+        }
+
+        if(stalement == true){
+            board->display({}, 0, true, false);
+            return;
+        }
+
+        if(check == true){
+            board->display({king_position}, 0, false, true);
+        }
+        else{
+            board->display();
+        }
+
         cout << "Indicate the current position of the piece you wish to move: ";
         label2:
         char row, col; cin >> col >> row;
@@ -142,7 +242,7 @@ void Game::play(){
             goto label2;
         }
         auto valid_moves = board->board[i][j]->getPiece()->get_valid_moves(board, row, col);
-        auto new_valid_moves = check(valid_moves, make_pair(i , j));
+        auto new_valid_moves = review(valid_moves, make_pair(i, j));
         
         if(new_valid_moves.empty()){
             cout << "No valid moves for the chosen piece. please select another piece: ";

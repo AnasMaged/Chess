@@ -16,15 +16,21 @@ class Game{
         
         vector<Piece*> get_white_pieces();
         
-        vector<Piece*> get_black_pieces(); 
+        vector<Piece*> get_black_pieces();  
 
-        bool can_move(Board* board, vector<Piece*> other_player_pieces, Color player_color);
+        void delete_piece_from_vector(Color color, Piece *piece);
+
+        void insert_piece_in_vector(Color color, Piece *piece);
+
+        bool is_check(Board* board, vector<Piece*> other_player_pieces, Color player_color);
+
+        bool is_stalemate(Board* board, vector<Piece*> player_pieces);
 
         Board* copy_and_move(Board* board, pair<int, int> from, pair<int , int> to);
 
         void move(Board* board, pair<int , int> from, pair<int , int> to);
 
-        set<pair<char, char>> check(set<pair<char, char>> valid_moves, pair<int , int> from);
+        set<pair<char, char>> review(set<pair<char, char>> valid_moves, pair<int , int> from);
 };
 
 
