@@ -7,7 +7,10 @@
 Piece::Piece(){}
 
 Piece::Piece(PieceType type, Color color, char row, char col) 
-            : type(type), color(color), row(row), col(col) {}
+            : type(type), color(color), row(row), col(col) {
+
+            
+            }
 
 PieceType Piece::getType(){
     return this->type;
@@ -40,7 +43,8 @@ void Piece::set_dy(vector<int> dy){
 }
 
 int Piece::get_max_moves(){
-    return this->max_moves;
+    int max_count_of_moves = this->max_moves;
+    return max_count_of_moves;
 }
 
 set<pair<char, char>> Piece::get_valid_moves(Board* board, char row, char col){
@@ -49,7 +53,8 @@ set<pair<char, char>> Piece::get_valid_moves(Board* board, char row, char col){
     auto [i , j] = get_positions_in_array(row, col);
 
     for(int k = 0; k < (int)this->dx.size(); k++){
-        int x = i + dx[k] , y = j + dy[k] , max_count_of_moves = current_board[i][j]->getPiece()->get_max_moves();
+        int x = i + dx[k] , y = j + dy[k] , max_count_of_moves = get_max_moves();
+        
         while(valid(x, y) && max_count_of_moves > 0){
             max_count_of_moves--;
             if(current_board[x][y]->getPiece() != nullptr){
@@ -65,5 +70,7 @@ set<pair<char, char>> Piece::get_valid_moves(Board* board, char row, char col){
             y += dy[k];
         } 
     }
+
+    
     return valid_moves;
 }
