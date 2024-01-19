@@ -9,6 +9,7 @@ class Game{
         Board *board;
         vector<Piece*> WhitePieces;
         vector<Piece*> BlackPieces;
+        string last_move;
     public:
         Game();
         
@@ -30,6 +31,10 @@ class Game{
 
         void move(Board* board, pair<int , int> from, pair<int , int> to);
 
+        string get_last_move();
+
+        void set_last_move(string s);
+        
         set<pair<char, char>> review(set<pair<char, char>> valid_moves, pair<int , int> from);
 };
 

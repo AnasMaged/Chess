@@ -51,36 +51,12 @@ void Game::insert_piece_in_vector(Color color, Piece *piece) {
     pieces.push_back(piece);
 }
 
+void Game::set_last_move(string s){
+    this->last_move = s;
+}
 
-Piece *make_new_peice(Piece* piece, char row, char col){
-    Piece *new_piece = nullptr;
-
-    if(piece->getType() == Knight){
-        new_piece = new KnightPiece(piece->getType(), piece->getColor(), row, col);
-    }
-
-    if(piece->getType() == Pawn){
-        new_piece = new PawnPiece(piece->getType(), piece->getColor(), row, col);
-    }
-    
-    if(piece->getType() == Bishop){
-        new_piece = new BishopPiece(piece->getType(), piece->getColor(), row, col);
-    }
-
-    if(piece->getType() == King){
-        new_piece = new KingPiece(piece->getType(), piece->getColor(), row, col);
-    }
-
-    if(piece->getType() == Queen){
-        new_piece = new QueenPiece(piece->getType(), piece->getColor(), row, col);
-    }
-
-    if(piece->getType() == Rook){
-        new_piece = new RookPiece(piece->getType(), piece->getColor(), row, col);
-    }
-
-
-    return new_piece;
+string Game::get_last_move(){
+    return this->last_move;
 }
 
 pair<char , char> get_king_position(vector<vector<Square*>> board, Color player_color){
@@ -108,7 +84,8 @@ bool Game::is_check(Board* board, vector<Piece*> other_player_pieces, Color play
 
     for(auto piece : other_player_pieces){
         auto [row , col] = piece->getPosition();
-        auto moves = piece->get_valid_moves(board, row, col);
+        
+        auto moves = piece->get_valid_moves(board, row, col, get_last_move());
 
         if(moves.count(king_position)){
             can = true;
@@ -125,7 +102,7 @@ Board* Game::copy_and_move(Board* board, pair<int, int> from, pair<int , int> to
 
     auto [row , col] = get_positions_on_board(to.first, to.second);
 
-    Piece* new_piece = make_new_peice(piece, row, col);
+    Piece* new_piece = make_new_peice(piece, row, col, piece->get_first_move());
     new_board->get_board()[to.first][to.second]->setPiece(new_piece);
     new_board->get_board()[from.first][from.second]->deletePiece();
     return new_board;
@@ -136,7 +113,7 @@ bool Game::is_stalemate(Board* board, vector<Piece*> player_pieces){
 
     for(auto piece : player_pieces){
         auto [row, col] = piece->getPosition();
-        auto moves = piece->get_valid_moves(board, row, col);
+        auto moves = piece->get_valid_moves(board, row, col, get_last_move());
         moves = review(moves, get_positions_in_array(row, col));
         if(!moves.empty()){
             cannot_move = false;
@@ -180,7 +157,7 @@ void Game::move(Board* board, pair<int , int> from, pair<int , int> to){
 
     auto [row , col] = get_positions_on_board(to.first, to.second);
 
-    Piece* new_piece = make_new_peice(piece, row, col);  
+    Piece* new_piece = make_new_peice(piece, row, col, false);  
     
     delete_piece_from_vector(piece->getColor(), piece);
 
@@ -189,6 +166,50 @@ void Game::move(Board* board, pair<int , int> from, pair<int , int> to){
         delete_piece_from_vector(attacked_piece->getColor(), attacked_piece);
     }
 
+    if(new_piece->getType() == Pawn){
+        if(from.second != to.second && board->get_board()[to.first][to.second]->getPiece() == nullptr){ // en_passent
+            Piece *attacked_piece = board->get_board()[to.first + (new_piece->getColor() == White ? 1 : -1)][to.second]->getPiece();
+            delete_piece_from_vector(attacked_piece->getColor(), attacked_piece); 
+            board->get_board()[to.first + (new_piece->getColor() == White ? 1 : -1)][to.second]->deletePiece();   
+        }
+
+        if(to.first == 0 || to.first == 7){
+            cout << "Promotion\n";
+            cout << "1- Queen\n";
+            cout << "2- Rook\n";
+            cout << "3- Knight\n";
+            cout << "4- Bishop\n";
+            cout << "Please enter the number of the piece you want to promote to: ";
+            
+            label:
+            string x; cin >> x;
+            if(x != "1" && x != "2" && x != "3" && x != "4"){
+                cout << "Invalid input, Please choose a number from 1 to 4 corresponding the piece you chose:";
+                goto label;
+            }
+
+            Color color = new_piece->getColor();
+            new_piece = nullptr;
+
+            if(x == "1"){            
+                new_piece = new QueenPiece(Queen, color, row, col);
+            }
+
+            if(x == "2"){
+                new_piece = new RookPiece(Rook, color, row, col);
+            }
+
+            if(x == "3"){
+                new_piece = new KnightPiece(Knight, color, row, col);
+            }
+
+            if(x == "4"){
+                new_piece = new BishopPiece(Bishop, color, row, col);
+            }
+        }
+    }
+
+
     insert_piece_in_vector(new_piece->getColor(), new_piece);
 
     board->get_board()[to.first][to.second]->setPiece(new_piece);
@@ -196,12 +217,14 @@ void Game::move(Board* board, pair<int , int> from, pair<int , int> to){
 }
 
 void Game::play(){
+    set_last_move("##");
+
     while(true){
         label1:
         vector<Piece*> other_player_pieces = (board->turn == White ? BlackPieces : WhitePieces);
         Color player_color = (board->turn == White ? White : Black);
         pair<char, char> king_position = get_king_position(board->get_board(), player_color);
-        bool check = is_check(board, other_player_pieces, player_color);
+        bool check = is_check(board, other_player_pieces, player_color);  
 
         vector<Piece*> player_pieces = (board->turn == White ? WhitePieces : BlackPieces);;
         bool stalement = is_stalemate(board, player_pieces);
@@ -224,7 +247,7 @@ void Game::play(){
             board->display();
         }
 
-        cout << "Indicate the current position of the piece you wish to move: ";
+        cout << "Indicate the current position of the piece you wish to move: "; 
         label2:
         char row, col; cin >> col >> row;
         if(col < 'a' || col > 'h' || row < '1' || row > '8'){
@@ -241,7 +264,7 @@ void Game::play(){
             cout << "Invalid input. Please select a square with one of your pieces: ";
             goto label2;
         }
-        auto valid_moves = board->board[i][j]->getPiece()->get_valid_moves(board, row, col);
+        auto valid_moves = board->board[i][j]->getPiece()->get_valid_moves(board, row, col, get_last_move());
         auto new_valid_moves = review(valid_moves, make_pair(i, j));
         
         if(new_valid_moves.empty()){
@@ -270,6 +293,7 @@ void Game::play(){
             else{
                 board->turn = White;
             }
+            set_last_move(s);
         }
         else if(s == "undo"){
             goto label1;
