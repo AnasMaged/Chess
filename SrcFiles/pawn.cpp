@@ -83,7 +83,7 @@ set<pair<char, char>> PawnPiece::get_valid_moves(Board* board, char row, char co
     }
     y--;
 
-    if(current_board[i][j]->getPiece()->get_first_move() == true){
+    if(current_board[i][j]->getPiece()->get_first_move() == true && current_board[x][y]->getPiece() == nullptr){
         x += dx[0];
         if(valid(x, y) && current_board[x][y]->getPiece() == nullptr){
             valid_moves.insert(get_positions_on_board(x , y));
