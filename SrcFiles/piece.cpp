@@ -59,7 +59,15 @@ int Piece::get_max_moves(){
     return max_count_of_moves;
 }
 
-set<pair<char, char>> Piece::get_valid_moves(Board* board, char row, char col, string last_move){
+void Piece::set_check(bool check){
+    this->checked = check;
+}
+
+bool Piece::is_checked(){
+    return this->checked;
+}
+
+set<pair<char, char>> Piece::get_valid_moves(Board* board, char row, char col, Game* game, string last_move){
     set<pair<char, char>> valid_moves;
     vector<vector<Square*>> current_board = board->get_board();
     auto [i , j] = get_positions_in_array(row, col);

@@ -19,6 +19,7 @@ class Board{
         void display(set<pair<char , char>> attacked = {}, int winner = 0, bool stalemate = false, bool check = false);
 
     friend class Game;
+    friend class KingPiece;
 };
 
 

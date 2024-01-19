@@ -3,6 +3,7 @@
 
 class Board;
 class Square;
+class Game;
 
 class Piece{
     private:
@@ -12,6 +13,7 @@ class Piece{
         vector<int> dx, dy;
         int max_moves;
         bool first_move;
+        bool checked;
     public:
         Piece();
 
@@ -39,7 +41,11 @@ class Piece{
 
         bool get_first_move();
 
-        virtual set<pair<char, char>> get_valid_moves(Board* board, char row, char col, string last_move = "");
+        bool is_checked();
+
+        void set_check(bool check);
+
+        virtual set<pair<char, char>> get_valid_moves(Board* board, char row, char col, Game* game, string last_move = "");
 };
 
 

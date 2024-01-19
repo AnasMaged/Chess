@@ -23,7 +23,7 @@ class Game{
 
         void insert_piece_in_vector(Color color, Piece *piece);
 
-        bool is_check(Board* board, vector<Piece*> other_player_pieces, Color player_color);
+        bool is_check(Board* board, vector<Piece*> other_player_pieces, Color player_color, pair<char,  char> target = {'#', '#'});
 
         bool is_stalemate(Board* board, vector<Piece*> player_pieces);
 
@@ -34,7 +34,7 @@ class Game{
         string get_last_move();
 
         void set_last_move(string s);
-        
+
         set<pair<char, char>> review(set<pair<char, char>> valid_moves, pair<int , int> from);
 };
 

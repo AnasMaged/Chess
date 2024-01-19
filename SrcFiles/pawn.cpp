@@ -18,7 +18,7 @@ PawnPiece::PawnPiece(PieceType type, Color color, char row, char col, bool first
 }
 
 
-set<pair<char, char>> PawnPiece::get_valid_moves(Board* board, char row, char col, string last_move){
+set<pair<char, char>> PawnPiece::get_valid_moves(Board* board, char row, char col, Game* game, string last_move){
     set<pair<char, char>> valid_moves;
     vector<vector<Square*>> current_board = board->get_board();
     auto [i , j] = get_positions_in_array(row, col);
