@@ -21,8 +21,8 @@ PawnPiece::PawnPiece(PieceType type, Color color, char row, char col, bool first
 set<pair<char, char>> PawnPiece::get_valid_moves(Board* board, char row, char col, Game* game, string last_move){
     set<pair<char, char>> valid_moves;
     vector<vector<Square*>> current_board = board->get_board();
-    auto [i , j] = get_positions_in_array(row, col);
-
+    pair<int, int> temp = get_positions_in_array(row, col);
+    int i = temp.first, j = temp.second;
 
     vector<int> dx = this->get_dx();
     vector<int> dy = this->get_dy();
@@ -44,7 +44,7 @@ set<pair<char, char>> PawnPiece::get_valid_moves(Board* board, char row, char co
         }
 
         else if(valid(x - dx[0], y)){
-            auto coordinates = get_positions_on_board(x - dx[0], y);
+            pair<char, char> coordinates = get_positions_on_board(x - dx[0], y);
 
             string en_passent; en_passent += coordinates.second; en_passent += coordinates.first;
 
@@ -69,7 +69,7 @@ set<pair<char, char>> PawnPiece::get_valid_moves(Board* board, char row, char co
         }
 
         else if(valid(x - dx[0], y)){
-            auto coordinates = get_positions_on_board(x - dx[0], y);
+            pair<char, char> coordinates = get_positions_on_board(x - dx[0], y);
 
             string en_passent; en_passent += coordinates.second; en_passent += coordinates.first;
 
