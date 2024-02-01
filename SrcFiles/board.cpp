@@ -46,9 +46,8 @@ Board::Board() : board(8, vector<Square*>(8)){
             else{
                 board[i][j] = new Square(White);
             }
-
-            auto [row , col] = get_positions_on_board(i , j);
-
+            pair<char, char> temp = get_positions_on_board(i, j);
+            char row = temp.first, col = temp.second;
             if(i == 7 || i == 0){
                 Color color = (i == 0 ? Black: White);
                 PieceType type;
