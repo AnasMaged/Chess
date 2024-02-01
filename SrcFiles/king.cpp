@@ -13,9 +13,9 @@ KingPiece::KingPiece(PieceType type, Color color, char row, char col, bool first
 
 set<pair<char, char>> KingPiece::get_valid_moves(Board* board, char row, char col, Game* game, string last_move){
     set<pair<char, char>> valid_moves;
-    vector<vector<Square*>> current_board = board->get_board();
-    auto [i , j] = get_positions_in_array(row, col);
-
+    vector<vector<Square*>> current_board = board->get_board(); 
+    pair<int, int> temp = get_positions_in_array(row, col);
+    int i = temp.first, j = temp.second;
     vector<int> dx = this->get_dx();
     vector<int> dy = this->get_dy();
 
