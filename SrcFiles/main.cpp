@@ -19,14 +19,14 @@ int main(){
     
         if(choice == "1"){
             cout << "Starting a new game...\n\n";
-            std::this_thread::sleep_for(std::chrono::seconds(2));
+            sleep(2);
             Game* game = new Game();
             game->play();
         }
 
         else if(choice == "2"){
             cout << "Exiting the program. Goodbye!\n\n";
-            std::this_thread::sleep_for(std::chrono::seconds(2));
+            sleep(2);
             break;
         }
         
